@@ -13,7 +13,9 @@ const TodoList = () => {
         isError,
         error,
         data:todos
-    } = useQuery('todos',getTodos)
+    } = useQuery('todos',getTodos,{
+        select:data=>data.sort((a,b)=>b.id -a.id)
+    })
 
     const addTodoMutation = useMutation(addTodo,{
         onSuccess:()=>{
@@ -39,7 +41,7 @@ const TodoList = () => {
 
     const handleSubmit = (e)=>{
         e.preventDefault()
-        addDeleteMutation.mutate({
+        addTodoMutation.mutate({
             userId:1,
             title:newTodo,
             completed:false
@@ -57,7 +59,7 @@ const TodoList = () => {
             value={newTodo}
             onChange={(e)=>setNewTodo(e.target.value)} />
         </div>
-        <button type='sunmit'>Save</button>
+        <button type='submit' >Save</button>
     </form>
 
     let content;
@@ -66,7 +68,28 @@ const TodoList = () => {
     }else if(isError){
         content = <p>{error.message}</p>
     }else{
-        content = JSON.stringify(todos)
+        content = todos.map((todo)=>{
+            return(
+                <article key={todo.id}>
+                    <div className="todo">
+                        <input
+                        className='checkboxInput'
+                        type="checkbox"
+                        checked={todo.completed}
+                        id={todo.id}
+                        onChange={()=>
+                            updateTodoMutation.mutate({
+                                ...todo,completed:!todo.completed
+                            })
+                        }
+                         />
+                        <label htmlFor={todo.id}>{todo.title}</label>
+                        <small>{todo.id}</small>
+                    </div>
+                    <button className='trash'onClick={()=>addDeleteMutation.mutate({id:todo.id})} >delete</button>
+                </article>
+            )
+        })
     }
 
 

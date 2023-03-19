@@ -81,3 +81,22 @@ input{
 button{
   width: fit-content;
 }
+
+article{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+  border: 2px solid white;
+  padding: 1.5rem;
+}
+
+.todo{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4rem;
+}
+.checkboxInput{
+  width: fit-content;
+}
